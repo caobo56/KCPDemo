@@ -66,4 +66,39 @@ https://github.com/skywind3000/kcp
 @end
 
 ```
+此外，我用来跟客户端/服务端 链接测试的例子是jkcp， https://github.com/beykery/jkcp
+在开发调试过程中可以以此作为调试基准进行测试。
+调试过程中注意客户端服务端的kcp参数要保持一致，以下是我的配置：
+server 配置：
+```
+        TestServer s = new TestServer(10099, 1);
+        s.noDelay(1, 10, 2, 1);
+        s.setMinRto(10);
+        s.wndSize(128, 128);
+        s.setTimeout(10 * 1000);
+        s.setMtu(512);
+        s.start();
+```
 
+clinet 配置：
+```
+    TestClient tc = new TestClient();
+    tc.noDelay(1, 10, 2, 1);
+    tc.setMinRto(10);
+    tc.wndSize(128, 128);
+    tc.setTimeout(10 * 1000);
+    tc.setMtu(512);
+    tc.setConv(121106);
+```
+
+iOS 端配置：
+```
+    //设置KCP参数，同服务端或者对点端参数保持一致
+    //特别是conv，对方客户端的conv 必须同自身服务端的conv一致
+    int32_t conv = 121106;
+    c_kcp = ikcp_create(conv, NULL);
+    ikcp_nodelay(c_kcp, 1, 10, 2, 1);
+    c_kcp->rx_minrto = 10;
+    ikcp_wndsize(c_kcp, 128, 128);
+    ikcp_setmtu(c_kcp, 512);
+```
