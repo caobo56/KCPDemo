@@ -13,6 +13,56 @@ https://www.cnblogs.com/yuanyifei1/p/6846310.html
 KCP C源代码：
 https://github.com/skywind3000/kcp
 
-使用方法在KCPgithub 上写的很清晰：
+使用方法在KCP github 上写的很清晰，我这里不在重复。
 
+此demo就是我使用OC 实现UDP 的协议传输数据。
+
+最终的使用方法：
+```
+#import "SendViewController.h"
+
+#import "KcpOnUdp.h"
+
+/**
+ *  客户端
+ */
+@interface SendViewController ()<KcpOnUdpDelegate>
+{
+    __weak IBOutlet UITextField *msgTF;
+    __weak IBOutlet UITextField *ipTF;
+    __weak IBOutlet UILabel *receiveLab;
+}
+
+@property (nonatomic,strong)KcpOnUdp * netWork;
+
+@end
+
+@implementation SendViewController
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"KcpOnUdp节点";
+    _netWork = [KcpOnUdp creatKcpOnUdpWithPort:10099];
+    //启动KcpOnUdp 并设置启动时的端口
+    _netWork.delegate = self;
+    //设置代理，接受数据
+
+}
+
+#pragma mark 发送消息
+- (IBAction)sendMsgClick:(UIButton *)sender {
+    //向指定的 ip port 发送数据
+    [_netWork sendMsg:msgTF.text toHost:ipTF.text toPort:10099];
+}
+
+#pragma mark KcpOnUdp delegate
+//接收数据
+-(void)kcpOnUdpDidReciveMsg:(NSString *)str{
+    NSLog(@"kcpOnUdpDidReciveMsg = %@",str);
+}
+
+@end
+
+```
 
