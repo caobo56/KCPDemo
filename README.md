@@ -14,6 +14,7 @@ KCP C源代码：
 https://github.com/skywind3000/kcp
 
 使用方法在KCP github 上写的很清晰，我这里不在重复。
+传送门：https://github.com/skywind3000/kcp/blob/master/README.md
 
 此demo就是我使用OC 实现UDP 的协议传输数据。
 
