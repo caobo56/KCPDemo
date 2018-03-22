@@ -19,20 +19,14 @@
 static UDPManager *udpManager;
 static int udpServerPort = 10000;
 
-+ (instancetype)allocWithZone:(struct _NSZone *)zone{
-    //线程锁
-    @synchronized (self) {
-        if (udpManager == nil) {
-            udpManager = [super allocWithZone:zone];
-        }
-    }
++ (instancetype)shareUDPManagerWithPort:(int)port{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        udpManager = [[self alloc] init];
+    });
     return udpManager;
 }
 
-+ (instancetype)shareUDPManagerWithPort:(int)port{
-    udpServerPort = port;
-    return  [[self alloc] init];
-}
 
 - (instancetype)init
 {
@@ -71,6 +65,7 @@ static int udpServerPort = 10000;
      withTimeout:(NSTimeInterval)timeout
              tag:(long)tag
 {
+//    NSLog(@"udp == %s",[data bytes]);
     [_reciveSocket sendData:data toHost:host port:port withTimeout:timeout tag:tag];
 }
 
